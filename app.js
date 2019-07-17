@@ -1,10 +1,26 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
+const dotenv = require('dotenv');
+dotenv.config();
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
-app.get('/', (req, res) => {
-  res.send("Hello World from node js")
+// DB Connect
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true }, 
+() => console.log('DB connected!'));
+mongoose.connection.on('error', err => {
+  console.log(`DB connection error : ${err.message}`);
 })
 
+// bring routes
+const postRoutes = require('./routes/posts');
 
-const PORT = 3000;
+// middleware
+app.use(morgan("dev"));
+app.use(bodyParser.json());
+// this routes will work as middleware
+app.use('/', postRoutes);
+
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {console.log(`Server up and running from port ${PORT}`)});
