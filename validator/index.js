@@ -17,3 +17,34 @@ exports.createPostValidator = (req, res, next) => {
   // lanjutkan ke middleware selanjutnya
   next();
 };
+
+exports.userSignUpValidator = (req, res, next) => {
+  // name is not null and between 4-10 characters
+  req.check('name', "Please fill the name input").not().isEmpty();
+  // email is not null, valid and normalized
+  req.check('email', "Please enter your valid email").not().isEmpty();
+  req.check('email')
+    .matches(/.+\@.+\..+/)
+    .withMessage("Email must contain @")
+    .isLength({
+      min:4,
+      max: 128
+    })
+  // check the password
+  req.check('password', "Password is required").not().isEmpty();
+  req.check('password')
+    .isLength({ min:6 })
+    .withMessage("Password must contain at least six characters")
+    .matches(/\d/)
+    .withMessage("Password must contain a number")
+  // check for errors
+  const errors = req.validationErrors();
+  if(errors) {
+    // hanya menampilkan error yg pertama kali ditemukan
+    const firstError = errors.map((error) => error.msg)[0]
+    return res.status(400).json({ error: firstError });
+  }
+  // jika tidak ada error
+  // lanjutkan ke middleware selanjutnya
+  next();
+}

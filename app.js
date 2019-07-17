@@ -16,13 +16,15 @@ mongoose.connection.on('error', err => {
 
 // bring routes
 const postRoutes = require('./routes/posts');
+const authRoutes = require('./routes/auth');
 
 // middleware
 app.use(morgan("dev"));
 app.use(bodyParser.json());
-app.use(expressValidator());
+app.use(expressValidator()); //hanya expressValidator versi 5.3.1 yg bisa menjadi function
 // this routes will work as middleware
 app.use('/', postRoutes);
+app.use('/', authRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {console.log(`Server up and running from port ${PORT}`)});
