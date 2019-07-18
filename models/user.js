@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema({
   salt:String,
   created: {
     type: Date,
-    deafult: Date.now
+    default: Date.now
   },
   updated: Date
 })

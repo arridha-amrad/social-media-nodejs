@@ -18,6 +18,7 @@ mongoose.connection.on('error', err => {
 // bring routes
 const postRoutes = require('./routes/posts');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/user');
 
 // middleware
 app.use(morgan("dev"));
@@ -27,6 +28,19 @@ app.use(expressValidator()); //hanya expressValidator versi 5.3.1 yg bisa menjad
 // this routes will work as middleware
 app.use('/', postRoutes);
 app.use('/', authRoutes);
+app.use('/', userRoutes);
+// apply custom middleware express-jwt
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).json({ error: "You need to login to access this page" });
+  }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {console.log(`Server up and running from port ${PORT}`)});
+
+
+
+
+
+
