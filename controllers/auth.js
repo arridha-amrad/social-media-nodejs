@@ -31,3 +31,18 @@ exports.signin = async(req, res) => {
     return res.json({ token, user: {_id, email, name }})
   });
 };
+
+exports.signout = async(req, res) => {
+  res.clearCookie("t")
+  return res.json({ mesage: "Sigout success" })
+};
+
+
+
+
+
+
+
+
+
+

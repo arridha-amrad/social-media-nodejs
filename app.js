@@ -23,7 +23,7 @@ const authRoutes = require('./routes/auth');
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(expressValidator()); //hanya expressValidator versi 5.3.1 yg bisa menjadi function
+app.use(expressValidator()); //hanya expressValidator versi 5.3.1 yg bisa menjadi function versi updatenya tidak bisa
 // this routes will work as middleware
 app.use('/', postRoutes);
 app.use('/', authRoutes);
