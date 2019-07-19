@@ -36,21 +36,20 @@ exports.getUser = (req, res) => {
 	res.json(req.profile);
 };
 
-exports.updateUser = (req, res, next) => {
+exports.updateUser = (req, res) => {
 	let user = req.profile;
 	user = _.extend(user, req.body); //extend -> mutate the source object
 	user.updated = Date.now();
 	user.save((err) => {
-		if(err) {
+		if(err)
 			return res.status(400).json({ error: "You are not authorized to perform this action" });
-		}
 		req.profile.salt = undefined;
 		req.profile.hashed_password = undefined;
 		res.json(user);
 	})
 };
 
-exports.deleteUser = (req, res, next) => {
+exports.deleteUser = (req, res) => {
 	let user = req.profile;
 	user.remove((err, user) => {
 		if(err) return res.status(400).json({ err })

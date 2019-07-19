@@ -2,6 +2,7 @@ const Post = require('../models/post');
 const formidable = require('formidable');
 // formidable for handling file uploads
 const fs = require('fs');
+const _ = require('lodash');
 
 exports.postById = (req, res, next, id) => {
   Post.findById(id)
@@ -75,6 +76,16 @@ exports.deletePost = (req, res) => {
     }
     res.json({ message: `Post has been removed successfully` })
   });
+}
+
+exports.updatePost = (req, res) => {
+  let post = req.post;
+  post = _.extend(post, req.body); //extend -> mutate the source object
+  post.created = Date.now();
+  post.save(err => {
+    if(err) return res.status(400).json({ error: err })
+    res.json(post);
+  })
 }
 
 
