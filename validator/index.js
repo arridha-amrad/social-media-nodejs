@@ -48,3 +48,20 @@ exports.userSignUpValidator = (req, res, next) => {
   // lanjutkan ke middleware selanjutnya
   next();
 }
+
+exports.userSignInValidator = (req, res, next) => {
+  // email is not null, valid and normalized
+  req.check('email', "Please enter your valid email").not().isEmpty();
+  // check the password
+  req.check('password', "Password is required").not().isEmpty();
+  // check for errors
+  const errors = req.validationErrors();
+  if(errors) {
+    // hanya menampilkan error yg pertama kali ditemukan
+    const firstError = errors.map((error) => error.msg)[0]
+    return res.status(400).json({ error: firstError });
+  }
+  // jika tidak ada error
+  // lanjutkan ke middleware selanjutnya
+  next();
+}

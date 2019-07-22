@@ -4,7 +4,7 @@ const expressJwt = require('express-jwt');
 
 exports.signup = async(req, res) => {
   const userExist = await User.findOne({email: req.body.email});
-  if(userExist) return res.status(403).json({ err: "Email has been registered" });
+  if(userExist) return res.status(403).json({ error: "Email has been registered" });
   const user = await new User(req.body)
   await user.save()
   res.status(200).json({ message: 'Signup success. Please login' });
@@ -35,7 +35,7 @@ exports.signin = async(req, res) => {
 
 exports.signout = async(req, res) => {
   res.clearCookie("t")
-  return res.json({ mesage: "Sigout success" })
+  return res.json({ message: "Signout success" })
 };
 
 exports.requireSignin = expressJwt({
