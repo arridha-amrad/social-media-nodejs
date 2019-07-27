@@ -14,11 +14,14 @@ exports.postById = (req, res, next, id) => {
   });
 }
 
-exports.getPosts = async (req, res) => {
+exports.getPosts = (req, res) => {
   // await Post.find().select("_id title body")
-  await Post.find().populate("postedBy", "_id name").select("_id title body")
+  Post.find()
+  .populate("postedBy", "_id name")
+  .select("_id title body created")
+  .sort({created: -1})
   .then(posts => {
-    res.json({ posts });
+    res.json( posts );
     //jika key dan value bernilai sama ({ posts: posts }) -> ({ posts })
   })
   .catch(err => console.log(err));
@@ -29,13 +32,14 @@ exports.createPost = (req, res) => {
   form.keepExtension = true;
   form.parse(req, (err, fields, files) => {
     if(err) return res.status(400).json({ error: "Image couldn't be uploaded" });
+
     let post = new Post(fields);
     req.profile.hashed_password = undefined;
     req.profile.salt = undefined;
-
     post.postedBy = req.profile;
+
     if(files.photo) {
-      post.photo.type = fs.readFileSync(files.photo.path),
+      post.photo.data = fs.readFileSync(files.photo.path),
       post.photo.contentType = files.photo.type
     }
     post.save((err, result) => {
@@ -44,6 +48,29 @@ exports.createPost = (req, res) => {
     })
   })
 };
+
+exports.updatePost = (req, res, next) => {
+  // handle the form
+  let form = new formidable.IncomingForm()
+  form.keepExtensions = true,
+  form.parse(req, (err, fields, files) => {
+    if(err) return res.status(400).json({ error: "Photo failed to upload" })
+    // make changes to user
+    let post = req.post
+    post = _.extend(post, fields)
+    post.updated = Date.now();
+
+    if(files.photo) {
+      post.photo.data = fs.readFileSync(files.photo.path)
+      post.photo.contentType = files.photo.type
+    }
+    // save
+    post.save((err, result) => {
+      if(err) return res.status(400).json({error: err})
+      res.json(post);
+    })
+  })
+}
 
 exports.postByUser = (req, res) => {
   Post.find({ postedBy: req.profile._id }).populate("postedBy", "_id name")
@@ -78,15 +105,15 @@ exports.deletePost = (req, res) => {
   });
 }
 
-exports.updatePost = (req, res) => {
-  let post = req.post;
-  post = _.extend(post, req.body); //extend -> mutate the source object
-  post.created = Date.now();
-  post.save(err => {
-    if(err) return res.status(400).json({ error: err })
-    res.json(post);
-  })
+exports.postPhoto = (req, res) => {
+  res.set("Content-Type", req.post.photo.contentType);
+  return res.send(req.post.photo.data);
 }
+
+exports.singlePost = (req, res) => {
+  return res.json(req.post);
+}
+
 
 
 
