@@ -1,0 +1,6 @@
+like/unlike
+
+add post to schema
+create routes for like and unlike
+controllers method for like/unlike
+add likes to returned posts

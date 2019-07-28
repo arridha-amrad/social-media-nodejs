@@ -12,8 +12,15 @@ const {
   deletePost,
   updatePost,
   postPhoto,
-  singlePost
+  singlePost,
+  like,
+  unlike
 } = require('../controllers/post');
+
+// like a post
+router.put("/post/like", requireSignin, like);
+// unlike a post
+router.put("/post/unlike", requireSignin, unlike);
 
 //any routes containing :userId, our app will first execute userById()
 router.param("userId", userById);
@@ -33,8 +40,6 @@ router.delete('/post/:postId', requireSignin, isPoster, deletePost);
 router.put('/post/:postId', requireSignin, isPoster, updatePost);
 // go to a singlePost
 router.get("/post/:postId", singlePost);
-
-
 
 module.exports = router;
 
