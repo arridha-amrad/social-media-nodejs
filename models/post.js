@@ -28,6 +28,14 @@ const postSchema = new mongoose.Schema({
         type: ObjectId,
         ref: "User"
       }
+    ],
+    comments: [
+      {
+        text: String,
+        created: {type: Date, default: Date.now},
+        //this comment posted by which user
+        postedBy: {type: ObjectId, ref: "User"}
+      }
     ]
 });
 

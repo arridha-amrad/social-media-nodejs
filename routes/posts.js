@@ -14,13 +14,20 @@ const {
   postPhoto,
   singlePost,
   like,
-  unlike
+  unlike,
+  comment,
+  unComment
 } = require('../controllers/post');
 
 // like a post
 router.put("/post/like", requireSignin, like);
 // unlike a post
 router.put("/post/unlike", requireSignin, unlike);
+
+// comment
+router.put("/post/comment", requireSignin, comment);
+//uncomment
+router.put("/post/uncomment", requireSignin, unComment)
 
 //any routes containing :userId, our app will first execute userById()
 router.param("userId", userById);
