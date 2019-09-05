@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
   fs.readFile("docs/apiDocs.json", (err, data) => {
     if(err) return res.status(400).json({ error: err })
     const docs = JSON.parse(data);
-    res.json(docs);
+    res.json(docs);	
   });
 });
 
@@ -36,6 +36,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(expressValidator()); //hanya expressValidator versi 5.3.1 yg bisa menjadi function, versi updatenya tidak bisa
 app.use(cors());
+
 // this routes will work as middleware
 app.use('/', postRoutes);
 app.use('/', authRoutes);
